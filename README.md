@@ -1,1 +1,0 @@
-# Saint-Maurus-Content-Inventory
