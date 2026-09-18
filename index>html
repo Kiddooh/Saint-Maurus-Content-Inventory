@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saint Maurus Youth Ministry — Content Inventory</title>
+<style>
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #e8ebef;
+    font-family: 'Calibri', 'Segoe UI', Arial, sans-serif;
+    color: #1f2430;
+    line-height: 1.5;
+    font-size: 11pt;
+  }
+
+  /* ============ TOOLBAR ============ */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #1a4a8d;
+    color: #fff;
+    padding: 12px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+  }
+  .toolbar h1 {
+    font-size: 13pt;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: .3px;
+    margin-right: auto;
+  }
+  .toolbar button {
+    border: none;
+    background: #d4af37;
+    color: #20160a;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 10.5pt;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform .2s, box-shadow .2s, background .2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,.15);
+  }
+  .toolbar button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,.25);
+    background: #e8c453;
+  }
+  .toolbar button.secondary {
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.3);
+  }
+  .toolbar button.secondary:hover { background: rgba(255,255,255,.28); }
+
+  .toolbar .saved-note {
+    font-size: 9pt;
+    color: #c9d5e8;
+    margin-left: 8px;
+    opacity: 0;
+    transition: opacity .4s;
+  }
+  .toolbar .saved-note.show { opacity: 1; }
+
+  /* ============ DOCUMENT SHEET ============ */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 24px auto;
+    background: #fff;
+    padding: 18mm 20mm;
+    box-shadow: 0 8px 30px rgba(16,32,64,.15);
+    border-radius: 4px;
+  }
+
+  /* ============ TYPOGRAPHY ============ */
+  h1, h2, h3, h4 {
+    font-family: 'Cambria', 'Georgia', serif;
+    color: #123566;
+    margin: 0 0 10px;
+    line-height: 1.3;
+  }
+  h1 { font-size: 22pt; }
+  h2 {
+    font-size: 15pt;
+    margin-top: 26px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #d4af37;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  h3 {
+    font-size: 12.5pt;
+    margin-top: 18px;
+    color: #1a4a8d;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  h4 { font-size: 11pt; margin-top: 12px; color: #2f6bc4; }
+
+  p { margin: 0 0 10px; }
+  strong { color: #123566; }
+
+  /* ============ COVER ============ */
+  .cover {
+    text-align: center;
+    padding: 40px 10px 30px;
+    border-bottom: 3px double #d4af37;
+    margin-bottom: 30px;
+  }
+  .cover .cross {
+    font-size: 42pt;
+    color: #d4af37;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .cover h1 { font-size: 26pt; margin-bottom: 6px; }
+  .cover .sub { font-size: 13pt; color: #1a4a8d; font-weight: 600; margin-bottom: 24px; }
+  .cover .meta {
+    display: inline-block;
+    text-align: left;
+    font-size: 10.5pt;
+    background: #f4f6fb;
+    padding: 14px 22px;
+    border-radius: 6px;
+    border-left: 4px solid #1a4a8d;
+  }
+  .cover .meta div { margin-bottom: 4px; }
+  .cover .meta span { display: inline-block; min-width: 130px; font-weight: 600; color: #123566; }
+
+  /* ============ TABLES ============ */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 18px;
+    font-size: 10pt;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  thead { background: #1a4a8d; color: #fff; }
+  thead th {
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 9.5pt;
+    letter-spacing: .3px;
+    border: 1px solid #123566;
+  }
+  tbody td {
+    padding: 8px 10px;
+    border: 1px solid #c8d0dc;
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) td { background: #f7f9fc; }
+
+  /* Editable cells */
+  [contenteditable="true"] {
+    outline: none;
+    cursor: text;
+    border-radius: 3px;
+    padding: 1px 3px;
+    transition: background .15s, box-shadow .15s;
+  }
+  [contenteditable="true"]:hover { background: #fff8e1; }
+  [contenteditable="true"]:focus {
+    background: #fff;
+    box-shadow: 0 0 0 2px #d4af37;
+  }
+
+  /* Inline blanks */
+  .blank {
+    display: inline-block;
+    min-width: 160px;
+    border-bottom: 1px dotted #8a94a6;
+    padding: 0 4px 1px;
+    color: #1f2430;
+  }
+  .blank.long { min-width: 340px; }
+  .blank.short { min-width: 90px; }
+
+  /* Checklist */
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li {
+    padding: 5px 0 5px 30px;
+    position: relative;
+    border-bottom: 1px dashed #dde2ea;
+    font-size: 10.5pt;
+  }
+  .checklist li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 6px;
+    width: 16px; height: 16px;
+    border: 1.5px solid #1a4a8d;
+    border-radius: 3px;
+    background: #fff;
+  }
+
+  /* Note boxes */
+  .note {
+    background: #fff8e1;
+    border-left: 4px solid #d4af37;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: 10pt;
+    border-radius: 0 6px 6px 0;
+  }
+  .note strong { color: #8a6d00; }
+
+  /* Section numbers */
+  .sec-num {
+    display: inline-block;
+    background: #1a4a8d;
+    color: #fff;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 26px;
+    font-size: 12pt;
+    font-weight: 700;
+    margin-right: 10px;
+    font-family: 'Cambria', serif;
+  }
+
+  /* Field-line style for long-form */
+  .field {
+    margin: 10px 0 16px;
+  }
+  .field label {
+    display: block;
+    font-weight: 600;
+    color: #123566;
+    margin-bottom: 4px;
+    font-size: 10.5pt;
+  }
+  .field .input {
+    display: block;
+    min-height: 24px;
+    border: 1px solid #c8d0dc;
+    border-radius: 4px;
+    padding: 6px 10px;
+    background: #fbfcfe;
+    font-size: 10.5pt;
+  }
+  .field .input.tall { min-height: 60px; }
+
+  /* Signature block */
+  .signatures {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 40px;
+    page-break-inside: avoid;
+  }
+  .sig-line {
+    border-top: 1.5px solid #1a4a8d;
+    padding-top: 6px;
+    font-size: 9.5pt;
+    color: #4a5468;
+  }
+  .sig-line strong { display: block; margin-bottom: 2px; color: #123566; }
+
+  /* Page breaks */
+  .page-break { page-break-before: always; break-before: page; }
+
+  /* ============ PRINT ============ */
+  @media print {
+    @page {
+      size: A4;
+      margin: 16mm 14mm;
+    }
+    html, body {
+      background: #fff !important;
+      font-size: 10.5pt;
+    }
+    .toolbar { display: none !important; }
+    .page {
+      width: auto;
+      min-height: 0;
+      margin: 0;
+      padding: 0;
+      box-shadow: none;
+      border-radius: 0;
+    }
+    h2 { page-break-after: avoid; break-after: avoid; }
+    h3 { page-break-after: avoid; break-after: avoid; }
+    table { page-break-inside: avoid; break-inside: avoid; }
+    thead { background: #1a4a8d !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    thead th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .note { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    [contenteditable="true"] { background: transparent !important; box-shadow: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ TOOLBAR ============ -->
+<div class="toolbar">
+  <h1>📄 Saint Maurus Content Inventory</h1>
+  <button onclick="downloadWord()">⬇ Download as Word (.doc)</button>
+  <button onclick="window.print()">🖨 Save as PDF / Print</button>
+  <button class="secondary" onclick="clearAll()">🗑 Clear All</button>
+  <span class="saved-note" id="savedNote">✓ Saved</span>
+</div>
+
+<!-- ============ DOCUMENT ============ -->
+<div class="page" id="documentBody">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cross">✝</div>
+    <h1>Saint Maurus Catholic Church Youth Ministry</h1>
+    <div class="sub">Website Content Inventory &amp; Data Collection Checklist</div>
+    <div class="meta">
+      <div><span>Document Version:</span> <span contenteditable="true" class="blank short">1.0</span></div>
+      <div><span>Prepared for:</span> Saint Maurus Catholic Church Youth Ministry</div>
+      <div><span>Date prepared:</span> <span contenteditable="true" class="blank short"></span></div>
+      <div><span>Prepared by:</span> <span contenteditable="true" class="blank"></span></div>
+      <div><span>Purpose:</span> Replace all demo content with real ministry information</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>How to use this document:</strong> Click any blank line or table cell below and type directly into it. Your entries are saved automatically in this browser. When finished, click <em>Download as Word</em> to get an editable .doc file, or <em>Save as PDF</em> to generate a PDF.
+  </div>
+
+  <!-- ============================== 1 ============================== -->
+  <h2><span class="sec-num">1</span>Branding &amp; Identity</h2>
+  <table>
+    <thead>
+      <tr><th style="width:32%">Item</th><th style="width:34%">Current (Demo)</th><th style="width:34%">Your Real Content</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Church full name</td><td>Saint Maurus Catholic Church</td><td contenteditable="true"></td></tr>
+      <tr><td>Ministry name</td><td>Youth Ministry</td><td contenteditable="true"></td></tr>
+      <tr><td>Tagline</td><td>Growing in faith, building community...</td><td contenteditable="true"></td></tr>
+      <tr><td>Logo file (PNG, 500×500)</td><td>SVG placeholder</td><td contenteditable="true"></td></tr>
+      <tr><td>Favicon (32×32 .ico)</td><td>Not set</td><td contenteditable="true"></td></tr>
+      <tr><td>Primary brand colour</td><td>#1a4a8d (blue)</td><td contenteditable="true"></td></tr>
+      <tr><td>Accent brand colour</td><td>#d4af37 (gold)</td><td contenteditable="true"></td></tr>
+      <tr><td>Preferred fonts</td><td>Inter + Plus Jakarta Sans</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 2 ============================== -->
+  <h2><span class="sec-num">2</span>Contact Details</h2>
+
+  <h3>2.1 Primary Contact Info</h3>
+  <table>
+    <thead>
+      <tr><th style="width:34%">Field</th><th style="width:33%">Demo Value</th><th style="width:33%">Your Real Content</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Phone number</td><td>+254 793 826442</td><td contenteditable="true"></td></tr>
+      <tr><td>WhatsApp (optional)</td><td>—</td><td contenteditable="true"></td></tr>
+      <tr><td>Email address</td><td>youth@saintmaurus.org</td><td contenteditable="true"></td></tr>
+      <tr><td>Physical address</td><td>2930 Mathare North, Nairobi</td><td contenteditable="true"></td></tr>
+      <tr><td>P.O. Box (if any)</td><td>—</td><td contenteditable="true"></td></tr>
+      <tr><td>Office hours</td><td>Mon–Fri, 9am–5pm</td><td contenteditable="true"></td></tr>
+      <tr><td>Emergency / pastoral contact</td><td>—</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.2 Map Location</h3>
+  <table>
+    <thead>
+      <tr><th style="width:34%">Field</th><th style="width:33%">Demo Value</th><th style="width:33%">Your Real Content</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Google Maps query</td><td>Mathare North, Nairobi</td><td contenteditable="true"></td></tr>
+      <tr><td>Google Maps embed URL</td><td>Auto-generated</td><td contenteditable="true"></td></tr>
+      <tr><td>Landmark directions</td><td>Near Thika Road, Juja Road</td><td contenteditable="true"></td></tr>
+      <tr><td>Parking notes</td><td>Free parking available</td><td contenteditable="true"></td></tr>
+      <tr><td>Public transport routes</td><td>Bus 12, 15, 22</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>2.3 Social Media Links</h3>
+  <table>
+    <thead>
+      <tr><th style="width:30%">Platform</th><th style="width:20%">Demo URL</th><th style="width:50%">Your Real URL</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Facebook</td><td>#</td><td contenteditable="true"></td></tr>
+      <tr><td>Instagram</td><td>#</td><td contenteditable="true"></td></tr>
+      <tr><td>Twitter / X</td><td>#</td><td contenteditable="true"></td></tr>
+      <tr><td>YouTube</td><td>#</td><td contenteditable="true"></td></tr>
+      <tr><td>TikTok (optional)</td><td>—</td><td contenteditable="true"></td></tr>
+      <tr><td>WhatsApp group invite</td><td>—</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 3 ============================== -->
+  <div class="page-break"></div>
+  <h2><span class="sec-num">3</span>Photos &amp; Media</h2>
+  <p>All photos below are currently placeholders in the <code>images/</code> folder. Please provide replacements. Recommended: <strong>JPG or WebP, at least 1200px wide, under 500KB each.</strong></p>
+
+  <h3>3.1 Page Banners &amp; Hero</h3>
+  <table>
+    <thead><tr><th>File name</th><th>Where it appears</th><th>Recommended size</th><th>Your file</th></tr></thead>
+    <tbody>
+      <tr><td>hero-home.jpg</td><td>Homepage hero background</td><td>1920×1080px</td><td contenteditable="true"></td></tr>
+      <tr><td>about-hero.jpg</td><td>About Us page header</td><td>1920×600px</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.2 Homepage Section Photos</h3>
+  <table>
+    <thead><tr><th>File name</th><th>Where it appears</th><th>Your file</th></tr></thead>
+    <tbody>
+      <tr><td>313231.jpg</td><td>Latest Sermons card 1</td><td contenteditable="true"></td></tr>
+      <tr><td>5343233.jpg</td><td>Latest Sermons card 2</td><td contenteditable="true"></td></tr>
+      <tr><td>Youth_hangouts.jpg</td><td>Latest Sermons card 3</td><td contenteditable="true"></td></tr>
+      <tr><td>kareeen-402.jpg</td><td>Testimonial — Emily Rodriguez</td><td contenteditable="true"></td></tr>
+      <tr><td>t545.jpg</td><td>Testimonial — Marcus Johnson</td><td contenteditable="true"></td></tr>
+      <tr><td>12321.jpg</td><td>Testimonial — Sophia Chen</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.3 Leadership Team Photos</h3>
+  <table>
+    <thead><tr><th>File name</th><th>Person</th><th>Your file</th></tr></thead>
+    <tbody>
+      <tr><td>download (3).jpeg</td><td>Mr. Anold Nyakwankwa</td><td contenteditable="true"></td></tr>
+      <tr><td>download (3).jfif</td><td>Alexander Nzioka</td><td contenteditable="true"></td></tr>
+      <tr><td>299581d1-...jpeg</td><td>Melkizedech Athis</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.4 Sermon Video Thumbnails</h3>
+  <table>
+    <thead><tr><th>File name</th><th>Video title</th><th>Your file</th></tr></thead>
+    <tbody>
+      <tr><td>yh64.jpg</td><td>Finding God in Everyday Life</td><td contenteditable="true"></td></tr>
+      <tr><td>g755.jpg</td><td>Building Christian Friendships</td><td contenteditable="true"></td></tr>
+      <tr><td>download.jfif</td><td>The Role of the Holy Spirit</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.5 Gallery (6+ photos)</h3>
+  <table>
+    <thead><tr><th>File name</th><th>Caption</th><th>Your file</th></tr></thead>
+    <tbody>
+      <tr><td>Youth_hangouts.jpg</td><td>Youth group gathering</td><td contenteditable="true"></td></tr>
+      <tr><td>download (33).jpeg</td><td>Service project</td><td contenteditable="true"></td></tr>
+      <tr><td>g755.jpg</td><td>Retreat activities</td><td contenteditable="true"></td></tr>
+      <tr><td>yh64.jpg</td><td>Youth Mass</td><td contenteditable="true"></td></tr>
+      <tr><td>download.jfif</td><td>Bible study</td><td contenteditable="true"></td></tr>
+      <tr><td>5343233.jpg</td><td>Choir performance</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.6 Gallery Videos</h3>
+  <table>
+    <thead><tr><th>Thumbnail</th><th>Video title</th><th>Video URL (YouTube/Vimeo)</th></tr></thead>
+    <tbody>
+      <tr><td>313231.jpg</td><td>Summer Retreat 2024 Highlights</td><td contenteditable="true"></td></tr>
+      <tr><td>download (2).jpg</td><td>Mission Trip Documentary</td><td contenteditable="true"></td></tr>
+      <tr><td>kareeen-402.jpg</td><td>Youth Choir Performance</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 4 ============================== -->
+  <div class="page-break"></div>
+  <h2><span class="sec-num">4</span>Leadership Team</h2>
+
+  <h3>4.1 Core Team</h3>
+  <div class="field">
+    <label>Profile 1 — Full name &amp; role</label>
+    <div class="input" contenteditable="true">Mr. Anold Nyakwankwa — Parish Priest &amp; Spiritual Director</div>
+  </div>
+  <div class="field">
+    <label>Short bio (2–4 sentences)</label>
+    <div class="input tall" contenteditable="true"></div>
+  </div>
+  <div class="field">
+    <label>Email (optional) &amp; years of service</label>
+    <div class="input" contenteditable="true"></div>
+  </div>
+
+  <div class="field">
+    <label>Profile 2 — Full name &amp; role</label>
+    <div class="input" contenteditable="true">Alexander Nzioka — Youth Minister</div>
+  </div>
+  <div class="field">
+    <label>Short bio</label>
+    <div class="input tall" contenteditable="true"></div>
+  </div>
+  <div class="field">
+    <label>Email &amp; years of service</label>
+    <div class="input" contenteditable="true"></div>
+  </div>
+
+  <div class="field">
+    <label>Profile 3 — Full name &amp; role</label>
+    <div class="input" contenteditable="true">Melkizedech Athis — Assistant Youth Minister</div>
+  </div>
+  <div class="field">
+    <label>Short bio</label>
+    <div class="input tall" contenteditable="true"></div>
+  </div>
+
+  <h3>4.2 Youth Leadership Team</h3>
+  <table>
+    <thead><tr><th>Name</th><th>Role</th><th>School / Grade</th><th>Photo file</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">Emily Rodriguez</td><td contenteditable="true">President</td><td contenteditable="true">Senior at Central High School</td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">Marcus Johnson</td><td contenteditable="true">Vice President</td><td contenteditable="true">Freshman at State University</td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">Sophia Chen</td><td contenteditable="true">Service Coordinator</td><td contenteditable="true">Junior at Central High School</td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 5 ============================== -->
+  <div class="page-break"></div>
+  <h2><span class="sec-num">5</span>Events</h2>
+
+  <h3>5.1 Upcoming Events</h3>
+  <table>
+    <thead><tr><th>Title</th><th>Date</th><th>Time</th><th>Location</th><th>Description</th><th>Reg. required?</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">Youth Summer Retreat</td><td contenteditable="true"></td><td contenteditable="true">9:00 AM – 5:00 PM</td><td contenteditable="true">Saint Maurus Retreat Center</td><td contenteditable="true">A day of prayer, fellowship, and fun activities.</td><td contenteditable="true">Yes / No</td></tr>
+      <tr><td contenteditable="true">Community Service Day</td><td contenteditable="true"></td><td contenteditable="true">8:00 AM – 12:00 PM</td><td contenteditable="true">Local Shelter</td><td contenteditable="true">Serve meals at the local homeless shelter.</td><td contenteditable="true">Yes / No</td></tr>
+      <tr><td contenteditable="true">Youth Mass &amp; Social</td><td contenteditable="true"></td><td contenteditable="true">5:00 PM – 8:00 PM</td><td contenteditable="true">Saint Maurus Church</td><td contenteditable="true">Youth-focused Mass, pizza, and games.</td><td contenteditable="true">Yes / No</td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.2 Live Calendar Events (exact dates)</h3>
+  <table>
+    <thead><tr><th>Date (YYYY-MM-DD)</th><th>Event label</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>5.3 Annual Events</h3>
+  <table>
+    <thead><tr><th>Event name</th><th>When it happens</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>Summer Retreat</td><td>Every June</td><td contenteditable="true"></td></tr>
+      <tr><td>Mission Trip</td><td>Every summer</td><td contenteditable="true"></td></tr>
+      <tr><td>Fall Kickoff</td><td>Every September</td><td contenteditable="true"></td></tr>
+      <tr><td>Advent Series</td><td>Every Advent</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 6 ============================== -->
+  <div class="page-break"></div>
+  <h2><span class="sec-num">6</span>Sermons, Podcast &amp; Media</h2>
+
+  <h3>6.1 Audio Sermons</h3>
+  <table>
+    <thead><tr><th>Title</th><th>Speaker</th><th>Date</th><th>Length</th><th>Audio link / file</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">The Power of Faith in Difficult Times</td><td contenteditable="true">Mr. Anold Nyakwankwa</td><td contenteditable="true">June 2, 2024</td><td contenteditable="true">25:42</td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">Living Your Faith as a Young Catholic</td><td contenteditable="true">Alexander Nzioka</td><td contenteditable="true">May 26, 2024</td><td contenteditable="true">22:15</td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">The Eucharist: Source and Summit</td><td contenteditable="true">Deacon Robert Williams</td><td contenteditable="true">May 19, 2024</td><td contenteditable="true">28:03</td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>6.2 Video Sermons</h3>
+  <table>
+    <thead><tr><th>Title</th><th>Speaker</th><th>Date</th><th>Length</th><th>Video URL</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">Finding God in Everyday Life</td><td contenteditable="true">Mr. Anold Nyakwankwa</td><td contenteditable="true">May 12, 2024</td><td contenteditable="true">32:18</td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">Building Christian Friendships</td><td contenteditable="true">Alexander Kathanzu</td><td contenteditable="true">May 20, 2025</td><td contenteditable="true">26:45</td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">The Role of the Holy Spirit</td><td contenteditable="true">Monicah Wambui</td><td contenteditable="true">April 28, 2024</td><td contenteditable="true">24:32</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>6.3 Podcast</h3>
+  <table>
+    <thead><tr><th style="width:40%">Field</th><th style="width:60%">Your content</th></tr></thead>
+    <tbody>
+      <tr><td>Podcast title</td><td contenteditable="true">Youth Ministry Podcast</td></tr>
+      <tr><td>Host names</td><td contenteditable="true"></td></tr>
+      <tr><td>RSS feed URL</td><td contenteditable="true"></td></tr>
+      <tr><td>Spotify show URL</td><td contenteditable="true"></td></tr>
+      <tr><td>Apple Podcasts URL</td><td contenteditable="true"></td></tr>
+      <tr><td>Google Podcasts URL</td><td contenteditable="true"></td></tr>
+      <tr><td>Latest episode title</td><td contenteditable="true">Faith in the Digital Age</td></tr>
+      <tr><td>Latest episode audio link</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 7 ============================== -->
+  <h2><span class="sec-num">7</span>Ministries</h2>
+  <table>
+    <thead><tr><th>Ministry</th><th>Meeting day</th><th>Time</th><th>Location</th><th>Contact email</th></tr></thead>
+    <tbody>
+      <tr><td>Youth Choir</td><td contenteditable="true">Wednesday</td><td contenteditable="true">6:00 PM</td><td contenteditable="true">Church</td><td contenteditable="true">choir@saintmaurus.org</td></tr>
+      <tr><td>Outreach Ministry</td><td contenteditable="true">Various</td><td contenteditable="true">Various</td><td contenteditable="true">Various</td><td contenteditable="true">outreach@saintmaurus.org</td></tr>
+      <tr><td>Prayer Group</td><td contenteditable="true">Monday</td><td contenteditable="true">7:30 PM</td><td contenteditable="true">Chapel</td><td contenteditable="true">prayer@saintmaurus.org</td></tr>
+      <tr><td>Bible Study (HS)</td><td contenteditable="true">Tuesday</td><td contenteditable="true">7:00 PM</td><td contenteditable="true">Youth Room</td><td contenteditable="true">bible@saintmaurus.org</td></tr>
+      <tr><td>Bible Study (MS)</td><td contenteditable="true">Thursday</td><td contenteditable="true">4:30 PM</td><td contenteditable="true">Youth Room</td><td contenteditable="true">bible@saintmaurus.org</td></tr>
+      <tr><td>Drama Ministry</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true">drama@saintmaurus.org</td></tr>
+      <tr><td>Small Groups</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true">smallgroups@saintmaurus.org</td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 8 ============================== -->
+  <div class="page-break"></div>
+  <h2><span class="sec-num">8</span>Testimonials &amp; Stories</h2>
+  <table>
+    <thead><tr><th>Name</th><th>Role</th><th>Quote</th><th>Photo file</th><th>Permission?</th></tr></thead>
+    <tbody>
+      <tr>
+        <td contenteditable="true">Emily Rodriguez</td>
+        <td contenteditable="true">High School Senior</td>
+        <td contenteditable="true">The youth group has become my second family...</td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true">Yes / No</td>
+      </tr>
+      <tr>
+        <td contenteditable="true">Marcus Johnson</td>
+        <td contenteditable="true">College Freshman</td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true">Yes / No</td>
+      </tr>
+      <tr>
+        <td contenteditable="true">Sophia Chen</td>
+        <td contenteditable="true">High School Junior</td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true">Yes / No</td>
+      </tr>
+      <tr>
+        <td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>
+      </tr>
+      <tr>
+        <td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>
+      </tr>
+      <tr>
+        <td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 9 ============================== -->
+  <h2><span class="sec-num">9</span>Blog Posts</h2>
+  <table>
+    <thead><tr><th>Title</th><th>Author</th><th>Date</th><th>Category</th><th>Full post text</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">Finding God in the Quiet Moments</td><td contenteditable="true">Steph London</td><td contenteditable="true">June 10, 2024</td><td contenteditable="true">Devotional</td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">The Gift of Community</td><td contenteditable="true">Leasly Maithya</td><td contenteditable="true">June 3, 2024</td><td contenteditable="true">Reflection</td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">How Youth Ministry Changed My Life</td><td contenteditable="true">Beatrice Wambui</td><td contenteditable="true">May 27, 2024</td><td contenteditable="true">Testimony</td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 10 ============================== -->
+  <h2><span class="sec-num">10</span>Prayer Requests</h2>
+  <table>
+    <thead><tr><th>Title</th><th>Submitter</th><th>Date</th><th>Prayer text</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">For Healing</td><td contenteditable="true">Anonymous</td><td contenteditable="true">June 12, 2024</td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">For Guidance</td><td contenteditable="true">Marcus</td><td contenteditable="true">June 10, 2024</td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">For Peace</td><td contenteditable="true">Anonymous</td><td contenteditable="true">June 8, 2024</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+  <div class="note"><strong>Note:</strong> Decide who is responsible for moderating and publishing new prayer requests on a weekly basis.</div>
+
+  <!-- ============================== 11 ============================== -->
+  <div class="page-break"></div>
+  <h2><span class="sec-num">11</span>Resources (Downloads)</h2>
+
+  <h3>11.1 Prayer Resources</h3>
+  <table>
+    <thead><tr><th>Title</th><th>Description</th><th>Download file</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">Daily Prayer Guide</td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">Rosary Guide</td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">Stations of the Cross</td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>11.2 Bible Study</h3>
+  <table>
+    <thead><tr><th>Title</th><th>Description</th><th>Download file</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">Gospel of Mark Study</td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">Romans Study</td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">Psalms for Teens</td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <h3>11.3 Catholic Teaching</h3>
+  <table>
+    <thead><tr><th>Title</th><th>Description</th><th>Download file</th></tr></thead>
+    <tbody>
+      <tr><td contenteditable="true">Sacraments 101</td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">Social Teaching</td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td contenteditable="true">Apologetics</td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 12 ============================== -->
+  <h2><span class="sec-num">12</span>Forms — Where Submissions Go</h2>
+  <p>Each form on the site needs a destination. Decide the email or backend service for each.</p>
+  <table>
+    <thead><tr><th>Form</th><th>Purpose</th><th>Destination email / backend</th></tr></thead>
+    <tbody>
+      <tr><td>Contact form</td><td>General inquiries</td><td contenteditable="true"></td></tr>
+      <tr><td>Prayer request form</td><td>Prayer intentions</td><td contenteditable="true"></td></tr>
+      <tr><td>Event registration modal</td><td>Event signups</td><td contenteditable="true"></td></tr>
+      <tr><td>Ministry interest form</td><td>Join a ministry</td><td contenteditable="true"></td></tr>
+      <tr><td>Volunteer interest form</td><td>Adult volunteers</td><td contenteditable="true"></td></tr>
+      <tr><td>First-time visitor form</td><td>New youth welcome</td><td contenteditable="true"></td></tr>
+      <tr><td>Podcast subscribe</td><td>Email list</td><td contenteditable="true"></td></tr>
+      <tr><td>Newsletter (footer)</td><td>Email list</td><td contenteditable="true"></td></tr>
+      <tr><td>Give / Donate form</td><td>Donations</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <strong>Recommended backends:</strong> Formspree (free tier) · Google Forms + Sheets (free) · Netlify Forms · EmailJS (client-side)
+  </div>
+
+  <!-- ============================== 13 ============================== -->
+  <h2><span class="sec-num">13</span>Give / Donation Details</h2>
+  <table>
+    <thead><tr><th style="width:45%">Field</th><th style="width:55%">Your content</th></tr></thead>
+    <tbody>
+      <tr><td>Preferred donation method</td><td contenteditable="true">M-Pesa / Stripe / PayPal / Bank transfer</td></tr>
+      <tr><td>M-Pesa Paybill / Till number</td><td contenteditable="true"></td></tr>
+      <tr><td>Bank name &amp; account number</td><td contenteditable="true"></td></tr>
+      <tr><td>PayPal email</td><td contenteditable="true"></td></tr>
+      <tr><td>Text-to-give keyword</td><td contenteditable="true"></td></tr>
+      <tr><td>Cheque payable to</td><td contenteditable="true"></td></tr>
+      <tr><td>Tax-deductible?</td><td contenteditable="true">Yes / No</td></tr>
+      <tr><td>Registration / charity number</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 14 ============================== -->
+  <div class="page-break"></div>
+  <h2><span class="sec-num">14</span>Legal Pages</h2>
+  <table>
+    <thead><tr><th style="width:40%">Document</th><th style="width:35%">Reviewed by</th><th style="width:25%">Date</th></tr></thead>
+    <tbody>
+      <tr><td>Privacy Policy</td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td>Terms of Use</td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td>Child safeguarding policy (link)</td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td>Photo consent policy (link)</td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 15 ============================== -->
+  <h2><span class="sec-num">15</span>Domain &amp; Hosting</h2>
+  <table>
+    <thead><tr><th style="width:45%">Item</th><th style="width:55%">Your content</th></tr></thead>
+    <tbody>
+      <tr><td>Preferred domain name</td><td contenteditable="true">e.g. youth.saintmaurus.org</td></tr>
+      <tr><td>Hosting provider</td><td contenteditable="true">Netlify / Vercel / cPanel / etc.</td></tr>
+      <tr><td>Who owns the domain</td><td contenteditable="true"></td></tr>
+      <tr><td>Who has admin access</td><td contenteditable="true"></td></tr>
+      <tr><td>SSL certificate</td><td contenteditable="true">Required — Yes</td></tr>
+      <tr><td>Business email accounts</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 16 ============================== -->
+  <h2><span class="sec-num">16</span>Analytics &amp; Tracking (Optional)</h2>
+  <table>
+    <thead><tr><th>Tool</th><th>Account ready?</th><th>Tracking ID / Code</th></tr></thead>
+    <tbody>
+      <tr><td>Google Analytics 4</td><td contenteditable="true">Yes / No</td><td contenteditable="true"></td></tr>
+      <tr><td>Google Search Console</td><td contenteditable="true">Yes / No</td><td contenteditable="true"></td></tr>
+      <tr><td>Facebook Pixel</td><td contenteditable="true">Yes / No</td><td contenteditable="true"></td></tr>
+      <tr><td>Meta Business Suite</td><td contenteditable="true">Yes / No</td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================== 17 ============================== -->
+  <h2><span class="sec-num">17</span>Final Checklist Before Going Live</h2>
+  <ul class="checklist">
+    <li>All contact details verified and correct</li>
+    <li>All social media links tested (open correctly)</li>
+    <li>All images uploaded and optimised (under 500KB each)</li>
+    <li>All sermon audio/video links working</li>
+    <li>All events dated correctly for the current year</li>
+    <li>Calendar events tested across multiple months</li>
+    <li>All forms tested (submit → data received)</li>
+    <li>Donation integration tested with real transaction</li>
+    <li>Privacy Policy and Terms approved by leadership</li>
+    <li>Dark mode tested on mobile, tablet, desktop</li>
+    <li>Site tested on Chrome, Safari, Firefox, Edge</li>
+    <li>Google Map shows correct location</li>
+    <li>Newsletter signup confirms to subscriber</li>
+    <li>404 page configured (if hosting supports it)</li>
+    <li>SSL certificate active (https:// works)</li>
+    <li>Backup system in place</li>
+  </ul>
+
+  <!-- ============================== 18 ============================== -->
+  <div class="page-break"></div>
+  <h2><span class="sec-num">18</span>Key Contacts</h2>
+  <table>
+    <thead><tr><th>Role</th><th>Name</th><th>Phone</th><th>Email</th></tr></thead>
+    <tbody>
+      <tr><td>Ministry Lead</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td>Web Developer / Designer</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td>Church Administrator</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td>Photo / Media Coordinator</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+      <tr><td>Social Media Manager</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+    </tbody>
+  </table>
+
+  <!-- SIGNATURES -->
+  <div class="signatures">
+    <div>
+      <div class="sig-line"><strong>Prepared by</strong>Name &amp; signature: ______________________<br>Date: ____________</div>
+    </div>
+    <div>
+      <div class="sig-line"><strong>Approved by</strong>Name &amp; signature: ______________________<br>Date: ____________</div>
+    </div>
+  </div>
+
+  <!-- ============================== HOW TO USE ============================== -->
+  <div class="page-break"></div>
+  <h2>📌 How to Use This Document</h2>
+  <ol style="font-size: 11pt; padding-left: 22px;">
+    <li style="margin-bottom: 8px;"><strong>Fill in every blank.</strong> Click any line, table cell, or blank space and type. Your work is saved automatically in this browser.</li>
+    <li style="margin-bottom: 8px;"><strong>Attach all photos</strong> as a zip file named <code>Saint-Maurus-Images.zip</code>.</li>
+    <li style="margin-bottom: 8px;"><strong>Collect all PDFs</strong> into a folder named <code>Saint-Maurus-Resources/</code>.</li>
+    <li style="margin-bottom: 8px;"><strong>Download as Word</strong> (button at top) to keep editing in Microsoft Word, Google Docs, or Pages.</li>
+    <li style="margin-bottom: 8px;"><strong>Or Save as PDF</strong> (button at top → choose "Save as PDF" as the destination in the print dialog).</li>
+    <li><strong>Send the completed document + files</strong> to your web developer, who will replace the demo content in <code>index.html</code> with your real data.</li>
+  </ol>
+
+  <div class="note" style="margin-top: 24px;">
+    <strong>For anything marked "Link" or "URL":</strong> please provide the full <code>https://</code> link — not just the name of the platform.
+  </div>
+
+</div>
+
+<script>
+  /* =========================================================
+     AUTO-SAVE & RESTORE contenteditable progress
+     ========================================================= */
+  const STORAGE_KEY = 'smy-content-inventory-v1';
+  const docBody = document.getElementById('documentBody');
+  const savedNote = document.getElementById('savedNote');
+
+  // Assign every contenteditable a stable index for save/restore
+  const editables = docBody.querySelectorAll('[contenteditable="true"]');
+  editables.forEach((el, i) => el.dataset.fieldIndex = i);
+
+  // Restore saved values
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+    editables.forEach(el => {
+      const key = el.dataset.fieldIndex;
+      if (saved[key] !== undefined) el.textContent = saved[key];
+    });
+  } catch (e) { /* ignore */ }
+
+  // Save on input (debounced)
+  let saveTimer;
+  function saveAll() {
+    const data = {};
+    editables.forEach(el => { data[el.dataset.fieldIndex] = el.textContent; });
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      savedNote.classList.add('show');
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => savedNote.classList.remove('show'), 1200);
+    } catch (e) { /* ignore */ }
+  }
+
+  docBody.addEventListener('input', function (e) {
+    if (e.target.matches('[contenteditable="true"]')) saveAll();
+  });
+
+  /* =========================================================
+     CLEAR ALL — with confirmation
+     ========================================================= */
+  function clearAll() {
+    if (!confirm('This will clear everything you have typed in this document. Are you sure?')) return;
+    editables.forEach(el => { el.textContent = ''; });
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    saveAll();
+  }
+
+  /* =========================================================
+     DOWNLOAD AS WORD (.doc)
+     ========================================================= */
+  function downloadWord() {
+    // Grab the current document HTML (with all the typed content baked in)
+    const contentHTML = docBody.innerHTML;
+
+    // Strip hover/focus helpers that shouldn't appear in Word
+    const cleanedHTML = contentHTML
+      .replace(/contenteditable="true"/g, '')
+      .replace(/data-field-index="\d+"/g, '');
+
+    const wordDocument = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office"
+            xmlns:w="urn:schemas-microsoft-com:office:word"
+            xmlns="http://www.w3.org/TR/REC-html40">
+      <head>
+        <meta charset="utf-8">
+        <title>Saint Maurus Youth Ministry — Content Inventory</title>
+        <!--[if gte mso 9]>
+        <xml>
+          <w:WordDocument>
+            <w:View>Print</w:View>
+            <w:Zoom>100</w:Zoom>
+          </w:WordDocument>
+        </xml>
+        <![endif]-->
+        <style>
+          @page WordSection1 { size: 21cm 29.7cm; margin: 1.5cm 1.5cm 1.5cm 1.5cm; }
+          div.WordSection1 { page: WordSection1; }
+
+          body {
+            font-family: Calibri, Arial, sans-serif;
+            font-size: 11pt;
+            color: #1f2430;
+            line-height: 1.5;
+          }
+          h1, h2, h3, h4 { font-family: Cambria, Georgia, serif; color: #123566; }
+          h1 { font-size: 22pt; }
+          h2 {
+            font-size: 15pt;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 4px;
+            margin-top: 22pt;
+          }
+          h3 { font-size: 12.5pt; color: #1a4a8d; margin-top: 14pt; }
+          p { margin: 0 0 8pt; }
+
+          .cover { text-align: center; border-bottom: 3px double #d4af37; padding-bottom: 18pt; margin-bottom: 18pt; }
+          .cover .cross { font-size: 40pt; color: #d4af37; }
+          .cover h1 { font-size: 26pt; margin: 6pt 0; }
+          .cover .sub { font-size: 13pt; color: #1a4a8d; font-weight: bold; margin-bottom: 16pt; }
+          .cover .meta { text-align: left; font-size: 10.5pt; padding: 8pt 14pt; border-left: 4px solid #1a4a8d; background: #f4f6fb; }
+          .cover .meta span { display: inline-block; min-width: 130pt; font-weight: bold; color: #123566; }
+
+          table { width: 100%; border-collapse: collapse; margin: 8pt 0 14pt; font-size: 10pt; }
+          thead { background: #1a4a8d; color: #fff; }
+          thead th { padding: 6pt 8pt; text-align: left; font-size: 9.5pt; border: 1px solid #123566; }
+          tbody td { padding: 6pt 8pt; border: 1px solid #c8d0dc; vertical-align: top; }
+          tbody tr:nth-child(even) td { background: #f7f9fc; }
+
+          .note { background: #fff8e1; border-left: 4px solid #d4af37; padding: 8pt 12pt; margin: 10pt 0; font-size: 10pt; }
+          .sec-num { display: inline-block; background: #1a4a8d; color: #fff; width: 22pt; height: 22pt; border-radius: 50%; text-align: center; line-height: 22pt; font-weight: bold; margin-right: 8pt; }
+
+          .blank { display: inline-block; min-width: 140pt; border-bottom: 1px dotted #8a94a6; }
+
+          .field { margin: 8pt 0 12pt; }
+          .field label { display: block; font-weight: bold; color: #123566; margin-bottom: 3pt; font-size: 10.5pt; }
+          .field .input { display: block; border: 1px solid #c8d0dc; padding: 6pt 10pt; background: #fbfcfe; font-size: 10.5pt; min-height: 18pt; }
+          .field .input.tall { min-height: 48pt; }
+
+          .checklist { list-style: none; padding-left: 0; }
+          .checklist li { padding: 4pt 0 4pt 26pt; position: relative; border-bottom: 1px dashed #dde2ea; font-size: 10.5pt; }
+          .checklist li::before { content: ''; position: absolute; left: 0; top: 5pt; width: 14pt; height: 14pt; border: 1.5px solid #1a4a8d; }
+
+          .signatures { display: block; margin-top: 30pt; }
+          .signatures > div { display: inline-block; width: 45%; margin-right: 4%; vertical-align: top; }
+          .sig-line { border-top: 1.5pt solid #1a4a8d; padding-top: 5pt; font-size: 9.5pt; color: #4a5468; }
+
+          .page-break { page-break-before: always; }
+        </style>
+      </head>
+      <body>
+        <div class="WordSection1">
+          ${cleanedHTML}
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Create the Blob and trigger download
+    const blob = new Blob(['\ufeff', wordDocument], { type: 'application/msword;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Saint-Maurus-Content-Inventory.doc';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+</script>
+
+</body>
+</html>
